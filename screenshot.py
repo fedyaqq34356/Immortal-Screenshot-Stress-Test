@@ -1,13 +1,14 @@
 import os
 import time
 from datetime import datetime
+
 import mss
 from PIL import Image
 import schedule
-import threading
 
 SELECTED_DIRS = []
 INTERVAL_SECONDS = 30
+
 
 def get_daily_folder(base_dir):
     today = datetime.now().strftime("%Y-%m-%d")
@@ -15,29 +16,37 @@ def get_daily_folder(base_dir):
     os.makedirs(folder_path, exist_ok=True)
     return folder_path
 
-def get_timestamp_path(folder, extension=".png"):
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    return os.path.join(folder, f"{timestamp}{extension}")
 
 def capture_and_save():
     if not SELECTED_DIRS:
         return
+
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+
+    with mss.mss() as sct:
+        monitor = sct.monitors[0]
+        raw = sct.grab(monitor)
+        img = Image.frombytes("RGB", raw.size, raw.bgra, "raw", "BGRX")
+
     for base_dir in SELECTED_DIRS:
         try:
             daily_folder = get_daily_folder(base_dir)
-            png_path = get_timestamp_path(daily_folder, ".png")
-            txt_path = get_timestamp_path(daily_folder, ".txt")
-            with mss.mss() as sct:
-                screenshot = sct.shot(mon=-1)
-                img = Image.open(screenshot)
+            png_path = os.path.join(daily_folder, f"{timestamp}.png")
+            txt_path = os.path.join(daily_folder, f"{timestamp}.txt")
+
             img.save(png_path)
+
             with open(txt_path, "w", encoding="utf-8") as f:
                 f.write("immortal")
-        except:
+        except Exception:
             pass
 
+
 def start_scheduler():
+    capture_and_save()
+
     schedule.every(INTERVAL_SECONDS).seconds.do(capture_and_save)
+
     while True:
         schedule.run_pending()
         time.sleep(1)

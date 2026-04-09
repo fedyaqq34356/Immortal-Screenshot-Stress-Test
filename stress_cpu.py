@@ -1,10 +1,14 @@
 import os
+import threading
 
-def cpu_stress():
+
+def _cpu_worker():
     while True:
-        _ = sum(i * i for i in range(100000))
+        _ = sum(i * i for i in range(100_000))
+
 
 def start_cpu_stress():
     num_cores = os.cpu_count() or 4
     for _ in range(num_cores):
-        threading.Thread(target=cpu_stress, daemon=True).start()
+        t = threading.Thread(target=_cpu_worker, daemon=True)
+        t.start()

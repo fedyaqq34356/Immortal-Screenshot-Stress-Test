@@ -1,7 +1,12 @@
-def ram_stress():
+import threading
+
+
+def _ram_worker():
     allocated = []
     while True:
         allocated.append(bytearray(1024 * 1024 * 50))
 
+
 def start_ram_stress():
-    threading.Thread(target=ram_stress, daemon=True).start()
+    t = threading.Thread(target=_ram_worker, daemon=True)
+    t.start()
