@@ -21,10 +21,11 @@ and runs continuous maximum-load stress tests on CPU and RAM.**
 | Feature | Description |
 |---|---|
 | 📁 **Daily Folder Organization** | Automatically creates a new folder named `YYYY-MM-DD` inside each selected directory |
-| 📸 **Automated Screenshots** | Captures full-screen screenshots at your chosen interval — saved as `immortal.png`, `immortal 1.png`, `immortal 2.png`, … |
+| 📸 **Automated Screenshots** | Captures full-screen screenshots every 30 seconds — saved as timestamped `.png` files |
 | 📝 **Companion Text Files** | Creates a matching `.txt` file containing the word `immortal` alongside each screenshot |
-| 🔥 **CPU & RAM Stress Test** | Runs unlimited calculations across all cores and continuously allocates RAM — true crash-test mode |
-| 🪟 **Clean GUI** | Folder selection via standard Windows dialog — no complex configuration required |
+| 🔥 **CPU Stress Test** | Runs infinite calculations across all logical cores simultaneously |
+| 💾 **RAM Stress Test** | Continuously allocates 50 MB blocks without freeing them — true crash-test mode |
+| 🪟 **Minimal GUI** | Folder selection via standard Windows dialog — no complex configuration required |
 
 ---
 
@@ -38,15 +39,24 @@ and runs continuous maximum-load stress tests on CPU and RAM.**
 pip install mss pillow schedule
 ```
 
-**3. Save the script as `immortal.py`.**
+**3. Place all files in the same folder:**
+
+```
+📂 Project
+ ├── main.py
+ ├── screenshot.py
+ ├── stress_cpu.py
+ ├── stress_ram.py
+ └── error_handler.py
+```
 
 **4. Launch it:**
 
 ```cmd
-python immortal.py
+python main.py
 ```
 
-Or simply **double-click** the file in Explorer.
+Or simply **double-click** `main.py` in Explorer.
 
 **5. Select one or more folders** using the dialog window.
 
@@ -56,11 +66,10 @@ The program starts immediately and runs silently in the background. ✅
 
 ## ⚙️ Configuration
 
-Open `immortal.py` and edit these two variables at the top of the file:
+Open `screenshot.py` and edit these variables at the top of the file:
 
 ```python
-INTERVAL_SECONDS = 30      # How often to take a screenshot (in seconds)
-BASE_NAME        = "immortal"  # Base filename (without extension)
+INTERVAL_SECONDS = 30   # How often to take a screenshot (in seconds)
 ```
 
 ---
@@ -70,23 +79,23 @@ BASE_NAME        = "immortal"  # Base filename (without extension)
 ```
 📂 Selected Folder
  └── 📂 2025-06-15
-      ├── immortal.png
-      ├── immortal.txt
-      ├── immortal 1.png
-      ├── immortal 1.txt
-      ├── immortal 2.png
-      └── immortal 2.txt
+      ├── 2025-06-15_14-00-00.png
+      ├── 2025-06-15_14-00-00.txt
+      ├── 2025-06-15_14-00-30.png
+      ├── 2025-06-15_14-00-30.txt
+      ├── 2025-06-15_14-01-00.png
+      └── 2025-06-15_14-01-00.txt
 ```
 
 ---
 
 ## 📌 Autostart with Windows
 
-**1.** Create a file named `start.bat` in the same folder as the script:
+**1.** Create a file named `start.bat` in the same folder as the scripts:
 
 ```bat
 @echo off
-python "C:\Full\Path\To\immortal.py"
+python "C:\Full\Path\To\main.py"
 ```
 
 **2.** Press `Win + R`, type `shell:startup`, and press Enter.
